@@ -9,6 +9,7 @@ const UP_CHUNK = 8 * 1024 * 1024; // حجم كل طلب رفع
 const WARMUP_MS = 2000;           // نستبعد أول ثانيتين (TCP slow-start)
 const IDLE_PINGS = 20;
 const SAMPLE_MS = 250;
+const PROBE_TIMEOUT = 4000;      // مهلة قياس الاستجابة تحت الحمل
 const HIST_KEY = 'nabd.history.v1', SET_KEY = 'nabd.settings.v1';
 
 /* ================= معايير التقييم (موثّقة) =================
@@ -193,8 +194,10 @@ async function loadedPings(ctx, isStopped) {
   const out = []; await sleep(WARMUP_MS - 500);
   while (!isStopped() && !ctx.cancelled) {
     const ac = new AbortController(); ctx.aborts.add(ac);
-    const to = setTimeout(() => ac.abort(), 3000);
-    try { const v = await ping(ac.signal); if (!isStopped()) out.push(v); } catch (e) { /* مهلة الطلب تحت الضغط */ }
+    let timedOut = false; const t0 = performance.now();
+    const to = setTimeout(() => { timedOut = true; ac.abort(); }, PROBE_TIMEOUT);
+    try { const v = await ping(ac.signal); if (!isStopped()) out.push(v); }
+    catch (e) { if (timedOut && !isStopped()) out.push(performance.now() - t0); /* طلب لم يرد خلال المهلة = تأخير لا يقل عن المهلة */ }
     clearTimeout(to); ctx.aborts.delete(ac);
     await sleep(400);
   }
@@ -331,7 +334,8 @@ function evaluate(r) {
   const j = isFinite(r.jitter) ? r.jitter : 0;
   const k4 = r.down >= TH.k4.ex ? 3 : r.down >= TH.k4.ok ? 2 : 1;
   const V = TH.vid, vid = (r.down >= V.ex.d && r.up >= V.ex.u && r.ping <= V.ex.p && j <= V.ex.j) ? 3 : (r.down >= V.ok.d && r.up >= V.ok.u && r.ping <= V.ok.p) ? 2 : 1;
-  const G = TH.game, game = (r.ping <= G.ex.p && j <= G.ex.j && b <= G.ex.b && r.down >= G.ex.d) ? 3 : (r.ping <= G.ok.p && j <= G.ok.j && b <= G.ok.b && r.down >= G.ok.d) ? 2 : 1;
+  const G = TH.game; let game = (r.ping <= G.ex.p && j <= G.ex.j && b <= G.ex.b && r.down >= G.ex.d) ? 3 : (r.ping <= G.ok.p && j <= G.ok.j && b <= G.ok.b && r.down >= G.ok.d) ? 2 : 1;
+  if (!isFinite(r.bloatDown) && !isFinite(r.bloatUp) && game === 3) game = 2; // لم يُقَس Bufferbloat: لا نمنح «ممتاز» للألعاب
   const overall = Math.min(k4, vid, game);
   const adv = [];
   if (b > TH.bloat[1]) adv.push(`التأخير يرتفع كثيراً تحت الضغط (Bufferbloat +${Math.round(b)}ms). فعّل SQM أو QoS في الراوتر إن توفّر، وأوقف التحميلات أثناء اللعب.`);
