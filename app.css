@@ -112,3 +112,49 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .ti.on{color:#2b6cff}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 92px);transform:translateX(-50%) translateY(20px);background:#0f1729ee;color:#fff;font-size:13px;padding:10px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:20;max-width:86vw;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%)}
+/* ===== v2 ===== */
+html{touch-action:manipulation}
+button,.ic,.ti,.it,.seg button{touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:transform .12s ease,opacity .12s ease,background-color .2s}
+button:active{transform:scale(.96)}
+.btn:active{transform:scale(.97);filter:brightness(1.08)}
+.ti:active div{transform:scale(.85)}
+.ti div{transition:transform .12s}
+.pulse{animation:pulse .45s ease}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.045)}100%{transform:scale(1)}}
+.cmp{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;font-size:11.5px;color:#56607a;margin-top:10px;background:#f5f7fb;border-radius:12px;padding:8px}
+.cmp b{font-weight:700}
+.tr-up{color:#16a34a}.tr-down{color:#dc2626}.tr-eq{color:#8a93a8}
+.it .r .tr{font-size:10px;font-weight:700;margin-right:4px}
+.danger.small{font-size:12px;display:block;margin:6px auto 0;padding:4px 10px}
+.mon{padding:12px}
+.mon svg{width:100%;height:90px;display:block}
+.mstats{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+.mstats div{background:#f5f7fb;border-radius:12px;padding:7px 2px;text-align:center}
+.mstats span{display:block;font-size:9.5px;color:#8a93a8;white-space:nowrap}
+.mstats b{display:block;font-size:15px;font-weight:800;direction:ltr;font-variant-numeric:tabular-nums}
+.mstats small{font-size:9px;color:#8a93a8}
+.mon .btn{width:100%;height:44px;font-size:15px}
+.mon .btn.stopping{background:#eef1f6;color:#dc2626;box-shadow:none}
+.note{font-size:11px;color:#8a93a8;line-height:1.7;margin-top:8px}
+.eye{color:#2b6cff;font-size:12px;font-weight:600;margin-right:8px}
+.st-ok{color:#16a34a}.st-no{color:#8a93a8}
+/* ===== الوضع الداكن (يتبع إعداد النظام؛ الفاتح هو الافتراضي) ===== */
+@media (prefers-color-scheme: dark){
+  html,body{background:#0b1020;color:#e8ecf6}
+  .n,.title,.sc .a,.kv .row b,.txt b,.srv b{color:#eef2fa}
+  .gcard,.hcard,.q,.srv,.ic{background:#151b2e;box-shadow:0 8px 24px #00000040}
+  .t,.us,.rnums div,.mstats div,.cmp{background:#1c2339}
+  .bar{background:#232b44}
+  .track{stroke:#232b44}
+  .grid line{stroke:#232b44}
+  .srv,.txt p,.us,.cmp,.legend{color:#a9b2c8}
+  .list .it,.kv .row{border-bottom-color:#232b44}
+  .tab{background:#0f1426e6;border-top-color:#232b44}
+  .ti{color:#6b7591}
+  .seg{background:#1c2339}.seg button{color:#a9b2c8}.seg button.on{background:#2a3352;color:#fff}
+  .install{background:#2b6cff1f;border-color:#2b6cff40;color:#b9cdfa}
+  .tag{background:#2b6cff26}
+  .mon .btn.stopping{background:#232b44}
+  .badge{background:#2b6cff22}
+  .empty{color:#a9b2c8}
+}

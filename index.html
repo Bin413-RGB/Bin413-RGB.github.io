@@ -2,10 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
 <title>نبض الشبكة</title>
 <meta name="description" content="اختبار سرعة وجودة الإنترنت: التحميل والرفع وزمن الاستجابة والتذبذب و Bufferbloat">
-<meta name="theme-color" content="#f5f7fb">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f7fb">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1020">
+<meta name="color-scheme" content="light dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -41,7 +43,7 @@
           <linearGradient id="gUp" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#c056f5"/></linearGradient>
         </defs>
         <g transform="rotate(135 125 125)">
-          <circle cx="125" cy="125" r="100" fill="none" stroke="#eef1f6" stroke-width="16" stroke-dasharray="471.24 628.32" stroke-linecap="round"/>
+          <circle cx="125" cy="125" r="100" fill="none" class="track" stroke="#eef1f6" stroke-width="16" stroke-dasharray="471.24 628.32" stroke-linecap="round"/>
           <circle id="arc" cx="125" cy="125" r="100" fill="none" stroke="url(#gDown)" stroke-width="16" stroke-dasharray="0 628.32" stroke-linecap="round" style="opacity:0"/>
         </g>
       </svg>
@@ -75,7 +77,7 @@
   <div id="resWrap">
     <div class="hcard">
       <div class="score">
-        <div class="ring"><svg width="84" height="84" aria-hidden="true"><circle cx="42" cy="42" r="35" fill="none" stroke="#eef1f6" stroke-width="9"/><circle id="ringArc" cx="42" cy="42" r="35" fill="none" stroke="#22c55e" stroke-width="9" stroke-dasharray="0 220" stroke-linecap="round" transform="rotate(-90 42 42)"/></svg><b id="ringTxt">—</b></div>
+        <div class="ring"><svg width="84" height="84" aria-hidden="true"><circle class="track" cx="42" cy="42" r="35" fill="none" stroke="#eef1f6" stroke-width="9"/><circle id="ringArc" cx="42" cy="42" r="35" fill="none" stroke="#22c55e" stroke-width="9" stroke-dasharray="0 220" stroke-linecap="round" transform="rotate(-90 42 42)"/></svg><b id="ringTxt">—</b></div>
         <div class="sc"><div class="a" id="rHead">—</div><div class="b" id="rAdv"></div></div>
       </div>
       <div class="rnums">
@@ -89,7 +91,9 @@
         <div class="us"><div>📹</div>مكالمات فيديو<b id="uVid">—</b></div>
         <div class="us"><div>🎮</div>ألعاب<b id="uGame">—</b></div>
       </div>
+      <div class="cmp hidden" id="rCmp"></div>
       <div class="rmeta" id="rMeta"></div>
+      <button class="danger small" id="delRec">حذف هذه النتيجة</button>
     </div>
     <div class="sec">السرعة خلال الاختبار<span class="muted" id="rDur"></span></div>
     <div class="hcard chartc">
@@ -105,21 +109,38 @@
 <section id="v-net" class="view" aria-label="الشبكة">
   <header class="nav"><h1 class="title">الشبكة</h1><button class="ic" id="netRefresh" aria-label="تحديث">↻</button></header>
   <div class="hcard kv" id="netInfo"><div class="muted">جارٍ القراءة…</div></div>
-  <p class="foot">هذه البيانات تأتي مباشرة من خادم Cloudflare الذي يراك ومن المتصفح. أسماء الأجهزة المتصلة بالراوتر وقوة إشارة Wi‑Fi لا يمكن قراءتها من متصفح الآيفون.</p>
+
+  <div class="sec">دعم IPv4 و IPv6<button class="link" id="ipTestBtn">إعادة الفحص</button></div>
+  <div class="hcard kv" id="ipInfo"><div class="muted">جارٍ الفحص…</div></div>
+
+  <div class="sec">مراقب الاستجابة<span class="muted" id="monProg">60 ثانية · طلب كل ثانية</span></div>
+  <div class="hcard mon">
+    <svg id="monChart" viewBox="0 0 330 90" preserveAspectRatio="none"></svg>
+    <div class="mstats">
+      <div><span>الأدنى</span><b id="mMin">—</b><small>ms</small></div>
+      <div><span>المتوسط</span><b id="mAvg">—</b><small>ms</small></div>
+      <div><span>الأعلى</span><b id="mMax">—</b><small>ms</small></div>
+      <div><span>Jitter</span><b id="mJit">—</b><small>ms</small></div>
+      <div><span>طلبات بلا رد</span><b id="mTo">—</b><small id="mToS">من 0</small></div>
+    </div>
+    <button class="btn" id="monBtn">ابدأ المراقبة</button>
+    <p class="note">«طلبات بلا رد» = طلبات لم يصل ردها خلال 3 ثوانٍ. ليست قياساً لفقد الحزم (Packet loss)، فالمتصفح لا يتيح ذلك.</p>
+  </div>
+  <p class="foot">كل البيانات هنا من خوادم Cloudflare التي تراك ومن المتصفح. أسماء الأجهزة المتصلة بالراوتر وقوة إشارة Wi‑Fi لا يمكن قراءتها من متصفح الآيفون.</p>
 </section>
 
 <!-- ===== شاشة المزيد ===== -->
 <section id="v-more" class="view" aria-label="المزيد">
   <header class="nav"><h1 class="title">المزيد</h1></header>
-  <div class="sec">مدة كل مرحلة</div>
-  <div class="seg" id="durSeg"><button data-d="6">قصير · 6ث</button><button data-d="10">عادي · 10ث</button><button data-d="15">طويل · 15ث</button></div>
-  <p class="foot">المدة الأطول أدق لكنها تستهلك بيانات أكثر. على الشبكات السريعة قد يستهلك الاختبار مئات الميغابايت — انتبه إن كنت على باقة جوال محدودة.</p>
+  <div class="sec">وضع الاختبار</div>
+  <div class="seg" id="modeSeg"><button data-m="eco">اقتصادي</button><button data-m="normal">عادي</button><button data-m="precise">دقيق</button></div>
+  <p class="foot" id="modeTxt"></p>
 
   <div class="sec" id="method">كيف نقيس</div>
   <div class="hcard txt">
     <p><b>الاستجابة (Ping):</b> الوسيط لـ 20 طلباً صغيراً متتالياً إلى خادم Cloudflare الأقرب قبل أي تحميل.</p>
     <p><b>Jitter:</b> متوسط الفرق المطلق بين كل قياسين متتاليين للاستجابة.</p>
-    <p><b>التحميل والرفع:</b> 6 اتصالات متوازية لمدة المرحلة؛ نستبعد أول ثانيتين (تسارع الاتصال) ونحسب المتوسط على الباقي.</p>
+    <p><b>التحميل والرفع (تكيّفي):</b> نبدأ باتصالين وطلبات صغيرة (100KB)، ثم نكبّر حجم الطلب وعدد الاتصالات (حتى 8) حسب السرعة المقاسة، فتُقاس الشبكات البطيئة والسريعة بدقة. نستبعد فترة التسارع الأولى ونحسب المتوسط على الباقي.</p>
     <p><b>Bufferbloat:</b> كم يرتفع زمن الاستجابة أثناء التحميل/الرفع مقارنةً بالاستجابة وقت الهدوء.</p>
     <p><b>ثبات السرعة:</b> مدى تذبذب سرعة التحميل لحظة بلحظة (معامل الاختلاف).</p>
   </div>
@@ -129,7 +150,7 @@
   <div class="hcard txt"><p>فقد الحزم (Packet loss)، قوة إشارة Wi‑Fi، سرعة DNS، واسم الشبكة. المتصفح لا يسمح بقياسها بدقة، لذلك لا نعرض أرقاماً تقديرية لها.</p></div>
   <div class="sec">البيانات</div>
   <div class="hcard txt"><p>السجل محفوظ على جهازك فقط (localStorage) ولا يُرسل لأي جهة.</p><button class="danger" id="clearHist">مسح السجل</button></div>
-  <p class="foot center">نبض الشبكة · الإصدار 1.0</p>
+  <p class="foot center">نبض الشبكة · الإصدار 2.0</p>
 </section>
 
 </main>
