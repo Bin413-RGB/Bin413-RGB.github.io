@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>نبض الشبكة</title>
+<meta name="description" content="اختبار سرعة وجودة الإنترنت: التحميل والرفع وزمن الاستجابة والتذبذب و Bufferbloat">
+<meta name="theme-color" content="#f5f7fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="نبض الشبكة">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="font.css">
+<link rel="preconnect" href="https://speed.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="app">
+
+<!-- ===== شاشة الاختبار ===== -->
+<section id="v-test" class="view on" aria-label="الاختبار">
+  <header class="nav"><h1 class="title">نبض الشبكة</h1><button class="ic" data-go="more" aria-label="الإعدادات">⚙︎</button></header>
+
+  <div id="install" class="install hidden">
+    <div>لتثبيته كتطبيق: اضغط زر المشاركة <b>⇪</b> في Safari ثم «إضافة إلى الشاشة الرئيسية».</div>
+    <button id="installX" aria-label="إغلاق">✕</button>
+  </div>
+
+  <div class="srv"><span class="dot" id="srvDot"></span><span id="srvTxt">جارٍ تحديد الخادم…</span><b id="srvRight"></b></div>
+
+  <div class="gcard">
+    <button class="stop hidden" id="stopBtn">■ إيقاف</button>
+    <div class="gauge">
+      <svg width="250" height="220" viewBox="0 0 250 220" aria-hidden="true">
+        <defs>
+          <linearGradient id="gDown" x1="0" x2="1"><stop offset="0" stop-color="#2b6cff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="gUp" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#c056f5"/></linearGradient>
+        </defs>
+        <g transform="rotate(135 125 125)">
+          <circle cx="125" cy="125" r="100" fill="none" stroke="#eef1f6" stroke-width="16" stroke-dasharray="471.24 628.32" stroke-linecap="round"/>
+          <circle id="arc" cx="125" cy="125" r="100" fill="none" stroke="url(#gDown)" stroke-width="16" stroke-dasharray="0 628.32" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div class="gv"><div class="n" id="gNum">0</div><div class="u" id="gUnit">Mbps</div><div class="tag" id="gTag">جاهز للاختبار</div></div>
+      <div class="ticks"><span>0</span><span id="gMax">100</span></div>
+    </div>
+    <div class="trio">
+      <div class="t"><div class="l">التحميل</div><div class="v blue"><span id="vDown">—</span> <small>Mbps</small></div></div>
+      <div class="t"><div class="l">الرفع</div><div class="v vio"><span id="vUp">—</span> <small>Mbps</small></div></div>
+      <div class="t"><div class="l">الاستجابة</div><div class="v"><span id="vPing">—</span> <small>ms</small></div></div>
+    </div>
+    <div class="live" id="liveWrap"><svg id="liveChart" viewBox="0 0 330 56" preserveAspectRatio="none"></svg></div>
+    <button class="btn" id="startBtn">ابدأ الاختبار</button>
+    <div class="usage" id="usage"></div>
+  </div>
+
+  <div class="sec">جودة الاتصال<button class="link" data-go="more" data-anchor="method">التفاصيل</button></div>
+  <div class="qgrid">
+    <div class="q"><div class="l">Jitter<span id="qJitL"></span></div><div class="v" id="qJit">—</div><div class="bar"><i id="qJitB"></i></div></div>
+    <div class="q"><div class="l">ثبات السرعة<span id="qStabL"></span></div><div class="v" id="qStab">—</div><div class="bar"><i id="qStabB"></i></div></div>
+    <div class="q"><div class="l">Bufferbloat ↓<span id="qBdL"></span></div><div class="v" id="qBd">—</div><div class="bar"><i id="qBdB"></i></div></div>
+    <div class="q"><div class="l">Bufferbloat ↑<span id="qBuL"></span></div><div class="v" id="qBu">—</div><div class="bar"><i id="qBuB"></i></div></div>
+  </div>
+  <p class="foot">القياس عبر خوادم Cloudflare العامة. فقد الحزم وإشارة Wi‑Fi وسرعة DNS غير متاحة في المتصفح لذلك لا نعرضها.</p>
+</section>
+
+<!-- ===== شاشة النتيجة والسجل ===== -->
+<section id="v-result" class="view" aria-label="السجل">
+  <header class="nav"><h1 class="title">النتيجة</h1><button class="ic" id="shareBtn" aria-label="مشاركة">⇪</button></header>
+  <div id="noRes" class="empty hidden"><div class="eic">◉</div><b>لا توجد نتائج بعد</b><p>شغّل أول اختبار وستظهر النتيجة والسجل هنا.</p><button class="btn inline" data-go="test">ابدأ الاختبار</button></div>
+  <div id="resWrap">
+    <div class="hcard">
+      <div class="score">
+        <div class="ring"><svg width="84" height="84" aria-hidden="true"><circle cx="42" cy="42" r="35" fill="none" stroke="#eef1f6" stroke-width="9"/><circle id="ringArc" cx="42" cy="42" r="35" fill="none" stroke="#22c55e" stroke-width="9" stroke-dasharray="0 220" stroke-linecap="round" transform="rotate(-90 42 42)"/></svg><b id="ringTxt">—</b></div>
+        <div class="sc"><div class="a" id="rHead">—</div><div class="b" id="rAdv"></div></div>
+      </div>
+      <div class="rnums">
+        <div><span>التحميل</span><b class="blue" id="rDown">—</b><small>Mbps</small></div>
+        <div><span>الرفع</span><b class="vio" id="rUp">—</b><small>Mbps</small></div>
+        <div><span>الاستجابة</span><b id="rPing">—</b><small>ms</small></div>
+        <div><span>Jitter</span><b id="rJit">—</b><small>ms</small></div>
+      </div>
+      <div class="use">
+        <div class="us"><div>🎬</div>بث 4K<b id="u4k">—</b></div>
+        <div class="us"><div>📹</div>مكالمات فيديو<b id="uVid">—</b></div>
+        <div class="us"><div>🎮</div>ألعاب<b id="uGame">—</b></div>
+      </div>
+      <div class="rmeta" id="rMeta"></div>
+    </div>
+    <div class="sec">السرعة خلال الاختبار<span class="muted" id="rDur"></span></div>
+    <div class="hcard chartc">
+      <svg id="resChart" width="100%" height="120" viewBox="0 0 330 120" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i class="lb"></i>التحميل</span><span><i class="lv"></i>الرفع</span><span class="muted" id="rPeak"></span></div>
+    </div>
+  </div>
+  <div class="sec" id="histHead">الاختبارات السابقة<button class="link" id="showAll">عرض الكل</button></div>
+  <div class="hcard list" id="hist"></div>
+</section>
+
+<!-- ===== شاشة الشبكة ===== -->
+<section id="v-net" class="view" aria-label="الشبكة">
+  <header class="nav"><h1 class="title">الشبكة</h1><button class="ic" id="netRefresh" aria-label="تحديث">↻</button></header>
+  <div class="hcard kv" id="netInfo"><div class="muted">جارٍ القراءة…</div></div>
+  <p class="foot">هذه البيانات تأتي مباشرة من خادم Cloudflare الذي يراك ومن المتصفح. أسماء الأجهزة المتصلة بالراوتر وقوة إشارة Wi‑Fi لا يمكن قراءتها من متصفح الآيفون.</p>
+</section>
+
+<!-- ===== شاشة المزيد ===== -->
+<section id="v-more" class="view" aria-label="المزيد">
+  <header class="nav"><h1 class="title">المزيد</h1></header>
+  <div class="sec">مدة كل مرحلة</div>
+  <div class="seg" id="durSeg"><button data-d="6">قصير · 6ث</button><button data-d="10">عادي · 10ث</button><button data-d="15">طويل · 15ث</button></div>
+  <p class="foot">المدة الأطول أدق لكنها تستهلك بيانات أكثر. على الشبكات السريعة قد يستهلك الاختبار مئات الميغابايت — انتبه إن كنت على باقة جوال محدودة.</p>
+
+  <div class="sec" id="method">كيف نقيس</div>
+  <div class="hcard txt">
+    <p><b>الاستجابة (Ping):</b> الوسيط لـ 20 طلباً صغيراً متتالياً إلى خادم Cloudflare الأقرب قبل أي تحميل.</p>
+    <p><b>Jitter:</b> متوسط الفرق المطلق بين كل قياسين متتاليين للاستجابة.</p>
+    <p><b>التحميل والرفع:</b> 6 اتصالات متوازية لمدة المرحلة؛ نستبعد أول ثانيتين (تسارع الاتصال) ونحسب المتوسط على الباقي.</p>
+    <p><b>Bufferbloat:</b> كم يرتفع زمن الاستجابة أثناء التحميل/الرفع مقارنةً بالاستجابة وقت الهدوء.</p>
+    <p><b>ثبات السرعة:</b> مدى تذبذب سرعة التحميل لحظة بلحظة (معامل الاختلاف).</p>
+  </div>
+  <div class="sec">معايير التقييم</div>
+  <div class="hcard txt" id="thrTxt"></div>
+  <div class="sec">غير متاح في المتصفح</div>
+  <div class="hcard txt"><p>فقد الحزم (Packet loss)، قوة إشارة Wi‑Fi، سرعة DNS، واسم الشبكة. المتصفح لا يسمح بقياسها بدقة، لذلك لا نعرض أرقاماً تقديرية لها.</p></div>
+  <div class="sec">البيانات</div>
+  <div class="hcard txt"><p>السجل محفوظ على جهازك فقط (localStorage) ولا يُرسل لأي جهة.</p><button class="danger" id="clearHist">مسح السجل</button></div>
+  <p class="foot center">نبض الشبكة · الإصدار 1.0</p>
+</section>
+
+</main>
+
+<nav class="tab" aria-label="التنقل">
+  <button class="ti on" data-go="test"><div>◉</div>الاختبار</button>
+  <button class="ti" data-go="result"><div>▤</div>السجل</button>
+  <button class="ti" data-go="net"><div>⌁</div>الشبكة</button>
+  <button class="ti" data-go="more"><div>☰</div>المزيد</button>
+</nav>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
