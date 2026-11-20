@@ -39,8 +39,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rnd = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 const median = a => { if (!a.length) return NaN; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
-const fmtS = v => !isFinite(v) ? '—' : v >= 100 ? Math.round(v).toString() : v >= 10 ? v.toFixed(1) : v.toFixed(2);
-const fmtMs = v => !isFinite(v) ? '—' : v >= 10 ? Math.round(v).toString() : v.toFixed(1);
+const fmtS = v => !Number.isFinite(v) ? '—' : v >= 100 ? Math.round(v).toString() : v >= 10 ? v.toFixed(1) : v.toFixed(2);
+const fmtMs = v => !Number.isFinite(v) ? '—' : v >= 10 ? Math.round(v).toString() : v.toFixed(1);
 const ltr = x => '\u2066' + x + '\u2069'; // عزل الأرقام والوحدات اللاتينية داخل النص العربي
 const fmtMB = b => ltr(b >= 1e9 ? (b / 1e9).toFixed(2) + ' GB' : Math.round(b / 1e6) + ' MB');
 
@@ -209,13 +209,14 @@ let gaugeMax = 100;
 const SCALES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 function setGauge(v, mode) {
   const n = $('#gNum'), u = $('#gUnit'), arc = $('#arc');
-  if (mode === 'ping') { n.textContent = fmtMs(v); u.textContent = 'ms'; arc.setAttribute('stroke-dasharray', `${Math.min(1, v / 200) * 471.24} 628.32`); $('#gMax').textContent = '200'; return; }
+  if (mode === 'ping') { n.textContent = fmtMs(v); u.textContent = 'ms'; arc.setAttribute('stroke-dasharray', `${Math.min(1, v / 200) * 471.24} 628.32`); arc.style.opacity = 1; $('#gMax').textContent = '200'; return; }
   u.textContent = 'Mbps';
   if (v > gaugeMax * 0.92) gaugeMax = SCALES.find(s => s > v * 1.1) || SCALES[SCALES.length - 1];
   $('#gMax').textContent = gaugeMax;
   n.textContent = fmtS(v);
   arc.setAttribute('stroke', mode === 'up' ? 'url(#gUp)' : 'url(#gDown)');
-  arc.setAttribute('stroke-dasharray', `${Math.max(0, Math.min(1, v / gaugeMax)) * 471.24} 628.32`);
+  const f = Math.max(0, Math.min(1, v / gaugeMax));
+  arc.setAttribute('stroke-dasharray', `${f * 471.24} 628.32`); arc.style.opacity = f > 0.002 ? 1 : 0;
 }
 function setTag(txt, cls) { const t = $('#gTag'); t.textContent = txt; t.className = 'tag' + (cls ? ' ' + cls : ''); }
 
@@ -242,17 +243,17 @@ function qCard(id, txt, lbl, cls, pct, color) {
 }
 function renderQuality(r) {
   if (!r) { ['qJit', 'qStab', 'qBd', 'qBu'].forEach(id => qCard(id, '—', '', '', 0, '#eef1f6')); return; }
-  if (isFinite(r.jitter)) {
+  if (Number.isFinite(r.jitter)) {
     const g = gradeJit(r.jitter);
     const [l, c, col] = g === 3 ? ['ممتاز', 'gr', '#22c55e'] : g === 2 ? ['جيد', 'gr', '#84cc16'] : g === 1.5 ? ['متوسط', 'am', '#f59e0b'] : ['ضعيف', 'rd', '#ef4444'];
     qCard('qJit', fmtMs(r.jitter) + ' ms', l, c, Math.max(8, 100 - r.jitter * 2.5), col);
   }
-  if (isFinite(r.stab)) {
+  if (Number.isFinite(r.stab)) {
     const [l, c, col] = r.stab <= TH.stab[0] ? ['ممتاز', 'gr', '#22c55e'] : r.stab <= TH.stab[1] ? ['جيد', 'am', '#f59e0b'] : ['متذبذب', 'rd', '#ef4444'];
     qCard('qStab', '±' + Math.round(r.stab) + ' %', l, c, Math.max(8, 100 - r.stab * 2), col);
   } else if (r.down != null) qCard('qStab', '—', '', '', 0, '#eef1f6');
   const bl = (id, v) => {
-    if (!isFinite(v)) return qCard(id, '—', 'غير متاح', 'muted', 0, '#eef1f6');
+    if (!Number.isFinite(v)) return qCard(id, '—', 'غير متاح', 'muted', 0, '#eef1f6');
     const [l, c, col] = v <= TH.bloat[0] ? ['ممتاز', 'gr', '#22c55e'] : v <= TH.bloat[1] ? ['متوسط', 'am', '#f59e0b'] : ['سيئ', 'rd', '#ef4444'];
     qCard(id, '+' + Math.round(v) + ' ms', l, c, Math.max(8, 100 - v / 2), col);
   };
@@ -330,12 +331,12 @@ async function runTest() {
 
 /* ================= النتيجة ================= */
 function evaluate(r) {
-  const b = Math.max(isFinite(r.bloatDown) ? r.bloatDown : 0, isFinite(r.bloatUp) ? r.bloatUp : 0);
-  const j = isFinite(r.jitter) ? r.jitter : 0;
+  const b = Math.max(Number.isFinite(r.bloatDown) ? r.bloatDown : 0, Number.isFinite(r.bloatUp) ? r.bloatUp : 0);
+  const j = Number.isFinite(r.jitter) ? r.jitter : 0;
   const k4 = r.down >= TH.k4.ex ? 3 : r.down >= TH.k4.ok ? 2 : 1;
   const V = TH.vid, vid = (r.down >= V.ex.d && r.up >= V.ex.u && r.ping <= V.ex.p && j <= V.ex.j) ? 3 : (r.down >= V.ok.d && r.up >= V.ok.u && r.ping <= V.ok.p) ? 2 : 1;
   const G = TH.game; let game = (r.ping <= G.ex.p && j <= G.ex.j && b <= G.ex.b && r.down >= G.ex.d) ? 3 : (r.ping <= G.ok.p && j <= G.ok.j && b <= G.ok.b && r.down >= G.ok.d) ? 2 : 1;
-  if (!isFinite(r.bloatDown) && !isFinite(r.bloatUp) && game === 3) game = 2; // لم يُقَس Bufferbloat: لا نمنح «ممتاز» للألعاب
+  if (!Number.isFinite(r.bloatDown) && !Number.isFinite(r.bloatUp) && game === 3) game = 2; // لم يُقَس Bufferbloat: لا نمنح «ممتاز» للألعاب
   const overall = Math.min(k4, vid, game);
   const adv = [];
   if (b > TH.bloat[1]) adv.push(`التأخير يرتفع كثيراً تحت الضغط (Bufferbloat +${Math.round(b)}ms). فعّل SQM أو QoS في الراوتر إن توفّر، وأوقف التحميلات أثناء اللعب.`);
@@ -344,7 +345,7 @@ function evaluate(r) {
   if (r.ping > G.ok.p) adv.push('زمن الاستجابة مرتفع؛ قد تكون الشبكة مزدحمة الآن.');
   if (r.up < V.ex.u) adv.push('سرعة الرفع منخفضة وقد تؤثر على مكالمات الفيديو والبث المباشر.');
   if (r.down < TH.k4.ok) adv.push('سرعة التحميل لا تكفي لبث 4K بثبات.');
-  if (isFinite(r.stab) && r.stab > TH.stab[1]) adv.push('سرعة التحميل متذبذبة خلال الاختبار.');
+  if (Number.isFinite(r.stab) && r.stab > TH.stab[1]) adv.push('سرعة التحميل متذبذبة خلال الاختبار.');
   if (!adv.length) adv.push('لا توجد مشاكل ملحوظة في هذا الاختبار. مناسب للبث والمكالمات والألعاب.');
   const head = overall === 3 ? 'اتصالك سريع ومستقر' : overall === 2 ? 'اتصالك جيد للاستخدام اليومي' : 'اتصالك يحتاج إلى تحسين';
   return { k4, vid, game, overall, head, adv: adv.slice(0, 2).join(' ') };
@@ -392,7 +393,7 @@ async function share() {
   const r = current, ev = evaluate(r);
   const text = `نبض الشبكة — نتيجة اختبار الإنترنت\n` +
     `التحميل: ${fmtS(r.down)} Mbps\nالرفع: ${fmtS(r.up)} Mbps\nالاستجابة: ${fmtMs(r.ping)} ms · Jitter: ${fmtMs(r.jitter)} ms\n` +
-    (isFinite(r.bloatDown) ? `Bufferbloat: +${Math.round(Math.max(r.bloatDown, r.bloatUp || 0))} ms\n` : '') +
+    (Number.isFinite(r.bloatDown) ? `Bufferbloat: +${Math.round(Math.max(r.bloatDown, r.bloatUp || 0))} ms\n` : '') +
     `التقييم: ${GRADE[ev.overall][0]} · بث 4K ${GRADE[ev.k4][0]} · فيديو ${GRADE[ev.vid][0]} · ألعاب ${GRADE[ev.game][0]}\n` +
     `${fmtWhen(r.t, true)}${r.colo ? ' · خادم ' + coloName(r.colo) : ''}`;
   const url = location.href.split('#')[0];
